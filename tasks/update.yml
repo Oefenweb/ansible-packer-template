@@ -1,0 +1,33 @@
+# tasks file for packer-template
+---
+- name: update | cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: update | disable release-upgrades
+  lineinfile:
+    dest: /etc/update-manager/release-upgrades
+    regexp: '^Prompt=.*$'
+    line: 'Prompt=never'
+    state: present
+
+- name: update | cache on boot
+  copy:
+    src: etc/init/refresh-apt.conf
+    dest: /etc/init/refresh-apt.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: update | disable periodic activities
+  copy:
+    src: etc/apt/apt.conf.d/10periodic-disable
+    dest: /etc/apt/apt.conf.d/10periodic-disable
+    owner: root
+    group: root
+    mode: 0644
+
+- name: update | upgrade dist
+  apt:
+    upgrade: dist

@@ -1,0 +1,74 @@
+# tasks file for packer-template
+---
+- name: cleanup | delete all linux headers
+  shell: >
+    dpkg --list | awk '{ print $2 }' | grep 'linux-headers' | xargs --no-run-if-empty apt-get -y purge
+
+- name: cleanup | delete specific linux kernels
+  shell: >
+    dpkg --list | awk '{ print $2 }' | grep 'linux-image-.*-generic' | grep -v `uname -r` | \
+    xargs --no-run-if-empty apt-get -y purge
+
+- name: cleanup | delete linux source
+  shell: >
+    dpkg --list | awk '{ print $2 }' | grep linux-source | xargs --no-run-if-empty apt-get -y purge
+
+- name: cleanup | get development packages
+  shell: dpkg --list | awk '{ print $2 }' | grep -- '-dev$'
+  register: _development_packages
+
+- name: cleanup | delete development packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+  when: item not in packer_template_cleanup_development_exclude
+  with_items: "{{ _development_packages.stdout_lines | default([]) }}"
+
+- name: cleanup | get docs packages
+  shell: dpkg --list | awk '{ print $2 }' | grep -- '-doc$'
+  register: _doc_packages
+
+- name: cleanup | delete doc packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+  when: item not in packer_template_cleanup_doc_exclude
+  with_items: "{{ _doc_packages.stdout_lines | default([]) }}"
+
+- name: cleanup | delete more packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+  with_items: "{{ packer_template_cleanup_more }}"
+
+- name: cleanup | apt clean and autoremove
+  command: apt-get -y {{ item }}
+  with_items:
+    - clean
+    - autoremove
+
+- name: cleanup | remove files
+  command: rm -rfv {{ item }}
+  register: _remove_files
+  changed_when: _remove_files.stdout_lines | default([]) | length > 0
+  with_items:
+    - VBoxGuestAdditions_*.iso
+    - VBoxGuestAdditions_*.iso.?
+
+    - /usr/share/doc/*
+
+    - /root/.cache/pip
+    - /home/vagrant/.cache/pip
+
+- name: cleanup | remove files
+  shell: "{{ item }}"
+  register: _remove_files
+  changed_when: _remove_files.stdout_lines | default([]) | length > 0
+  with_items:
+    # caches
+    - find /var/cache -type f -print0 | xargs --no-run-if-empty -0 rm -fv
+    # log files
+    - find /var/log -type f -print0 | xargs --no-run-if-empty -0 rm -fv

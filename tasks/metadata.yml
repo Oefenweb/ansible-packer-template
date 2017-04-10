@@ -1,0 +1,9 @@
+# tasks file for packer-template
+---
+- name: metadata | add
+  copy:
+    content: "{{ packer_template_metadata | to_json }}"
+    dest: /etc/packer-metadata.json
+    owner: root
+    group: root
+    mode: 0444

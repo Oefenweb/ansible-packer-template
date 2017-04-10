@@ -1,0 +1,13 @@
+# tasks file for packer-template
+---
+- name: ssh-server | configure
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: '^UseDNS'
+      line: 'UseDNS no'
+    - regexp: '^GSSAPIAuthentication'
+      line: 'GSSAPIAuthentication no'

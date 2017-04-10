@@ -1,0 +1,7 @@
+# tasks file for packer-template
+---
+- name: reboot
+  command: shutdown -r now
+  async: 0
+  poll: 0
+  ignore_errors: yes
