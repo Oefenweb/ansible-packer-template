@@ -1,0 +1,39 @@
+# defaults file for packer-template
+---
+packer_template_state: ''
+packer_template_metadata:
+  build:
+    timestamp: "{{ packer_template_metadata_build_timestamp }}"
+    revision: "{{ packer_template_metadata_build_revision }}"
+    version: "{{ packer_template_metadata_build_version }}"
+packer_template_metadata_build_timestamp: __UNKNOWN_BUILD_TIMESTAMP__
+packer_template_metadata_build_revision: __UNKNOWN_BUILD_REVISION__
+packer_template_metadata_build_version: __UNKNOWN_BUILD_VERSION__
+
+packer_template_cleanup_development_exclude: []
+packer_template_cleanup_doc_exclude: []
+packer_template_cleanup_more: "{{ packer_template_preset_cleanup_more_x11_libraries + packer_template_preset_cleanup_more_obsolete_networking + packer_template_preset_cleanup_more_oddities + packer_template_preset_cleanup_more_various }}"
+
+# presets
+packer_template_preset_cleanup_more_x11_libraries:
+  - libx11-data
+  - xauth
+  - libxmuu1
+  - libxcb1
+  - libx11-6
+  - libxext6
+packer_template_preset_cleanup_more_obsolete_networking:
+  - ppp
+  - pppconfig
+  - pppoeconf
+packer_template_preset_cleanup_more_oddities:
+  - popularity-contest
+  - installation-report
+  - command-not-found
+  - command-not-found-data
+  - friendly-recovery
+packer_template_preset_cleanup_more_various:
+  - wireless-tools
+  - wpasupplicant
+
+  - ntfs-3g

@@ -1,0 +1,30 @@
+# test file for packer-template
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  roles:
+    - role: ../../
+      packer_template_state: pre
+
+- hosts: all
+  remote_user: vagrant
+  become: true
+  gather_facts: no
+  pre_tasks:
+    - wait_for:
+        port: "{{ ansible_ssh_port | default(22) }}"
+        host: "{{ ansible_ssh_host | default(inventory_hostname) }}"
+        search_regex: OpenSSH
+        delay: 10
+      connection: local
+      become: false
+
+- hosts: all
+  remote_user: vagrant
+  become: true
+  roles:
+    - role: ../../
+      packer_template_state: post
+      packer_template_cleanup_development_exclude:
+        - libmysqlclient-dev
