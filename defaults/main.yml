@@ -12,7 +12,7 @@ packer_template_metadata_build_version: __UNKNOWN_BUILD_VERSION__
 
 packer_template_cleanup_development_exclude: []
 packer_template_cleanup_doc_exclude: []
-packer_template_cleanup_more: "{{ packer_template_preset_cleanup_more_x11_libraries + packer_template_preset_cleanup_more_obsolete_networking + packer_template_preset_cleanup_more_oddities }}"
+packer_template_cleanup_more: "{{ packer_template_preset_cleanup_more_x11_libraries + packer_template_preset_cleanup_more_obsolete_networking + packer_template_preset_cleanup_more_oddities + packer_template_preset_cleanup_more_various }}"
 
 # presets
 packer_template_preset_cleanup_more_x11_libraries:
@@ -32,3 +32,8 @@ packer_template_preset_cleanup_more_oddities:
   - command-not-found
   - command-not-found-data
   - friendly-recovery
+packer_template_preset_cleanup_more_various:
+  - wireless-tools
+  - wpasupplicant
+
+  - ntfs-3g

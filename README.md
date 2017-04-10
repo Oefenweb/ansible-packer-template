@@ -18,7 +18,7 @@ None
 
 * `packer_template_cleanup_development_exclude` [default: `[]`]: Packages (development) *not* to remove (e.g. `libmysqlclient-dev`)
 * `packer_template_cleanup_doc_exclude` [default: `[]`]: Packages (doc) *not* to remove
-* `packer_template_cleanup_more` [default: `"{{ packer_template_preset_cleanup_more_x11_libraries + packer_template_preset_cleanup_more_obsolete_networking + packer_template_preset_cleanup_more_oddities + packer_template_preset_cleanup_more_various}}"`]: Packages (more) to remove
+* `packer_template_cleanup_more` [default: `"{{ packer_template_preset_cleanup_more_x11_libraries + packer_template_preset_cleanup_more_obsolete_networking + packer_template_preset_cleanup_more_oddities + packer_template_preset_cleanup_more_various }}"`]: Packages (more) to remove
 
 ## Dependencies
 
