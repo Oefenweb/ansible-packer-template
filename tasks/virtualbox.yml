@@ -45,4 +45,5 @@
     state: absent
   with_items:
     - /tmp/vbox
-    - "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
+    # The default filter is needed because of a bug in 2.2.0.0
+    - "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout | default('') }}.iso"
