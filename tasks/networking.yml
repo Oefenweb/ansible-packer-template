@@ -1,20 +1,22 @@
 # tasks file for packer-template
 ---
-- name: networking | disable automatic udev rules for interfaces
-  command: rm -rfv {{ item }}
-  register: _disable_udev_rules
-  changed_when: _disable_udev_rules.stdout_lines | length > 0
-  with_items:
-    - /etc/udev/rules.d/70-persistent-net.rules
-    - /lib/udev/rules.d/75-persistent-net-generator.rules
-    - /dev/.udev/
-    - /var/lib/dhcp3/*
-    - /var/lib/dhcp/*
+- block:
+    - name: networking | disable automatic udev rules for interfaces
+      command: rm -rfv {{ item }}
+      register: _disable_udev_rules
+      changed_when: _disable_udev_rules.stdout_lines | length > 0
+      with_items:
+        - /etc/udev/rules.d/70-persistent-net.rules
+        - /lib/udev/rules.d/75-persistent-net-generator.rules
+        - /dev/.udev/
+        - /var/lib/dhcp3/*
+        - /var/lib/dhcp/*
 
-- name: networking | disable automatic udev rules for interfaces
-  file:
-    path: /etc/udev/rules.d/70-persistent-net.rules
-    state: directory
+    - name: networking | disable automatic udev rules for interfaces
+      file:
+        path: /etc/udev/rules.d/70-persistent-net.rules
+        state: directory
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version | version_compare('15.04', '<') or ansible_distribution == 'Debian')
 
 - name: networking | make dhclient happy
   lineinfile:

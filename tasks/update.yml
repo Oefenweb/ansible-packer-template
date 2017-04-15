@@ -11,6 +11,7 @@
     regexp: '^Prompt=.*$'
     line: 'Prompt=never'
     state: present
+  when: ansible_distribution == 'Ubuntu'
 
 - name: update | cache on boot
   copy:
