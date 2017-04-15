@@ -1,9 +1,12 @@
 # tasks file for packer-template
 ---
-- name: update | cache
+- name: update | cache and install dependencies
   apt:
+    name: "{{ item }}"
+    state: "{{ apt_install_state | default('latest') }}"
     update_cache: true
     cache_valid_time: 3600
+  with_items: "{{ packer_template_dependencies }}"
 
 - name: update | disable release-upgrades
   lineinfile:
