@@ -32,6 +32,14 @@
   shell: sh /tmp/vbox/VBoxLinuxAdditions.run
   failed_when: false
 
+- name: virtualbox | fix mount.vboxsf
+  file:
+    src: "/opt/VBoxGuestAdditions-{{ _vbox_version.stdout }}/lib/VBoxGuestAdditions/mount.vboxsf"
+    dest: /sbin/mount.vboxsf
+    state: link
+    force: true
+  when: _vbox_version.stdout | version_compare('5.1.20', '==')
+
 - name: virtualbox | umount iso
   mount:
     name: /tmp/vbox
