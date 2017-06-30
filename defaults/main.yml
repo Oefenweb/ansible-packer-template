@@ -38,5 +38,6 @@ packer_template_preset_cleanup_more_oddities:
 packer_template_preset_cleanup_more_various:
   - wireless-tools
   - wpasupplicant
-
   - ntfs-3g
+  - laptop-detect
+  - linux-firmware
