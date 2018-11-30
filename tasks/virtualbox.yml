@@ -38,7 +38,7 @@
     dest: /sbin/mount.vboxsf
     state: link
     force: true
-  when: _vbox_version.stdout | version_compare('5.1.20', '==')
+  when: _vbox_version.stdout is version('5.1.20', '==')
 
 - name: virtualbox | umount iso
   mount:
