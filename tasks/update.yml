@@ -2,11 +2,10 @@
 ---
 - name: update | cache and install dependencies
   apt:
-    name: "{{ item }}"
+    name: "{{ packer_template_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
     update_cache: true
     cache_valid_time: 3600
-  with_items: "{{ packer_template_dependencies }}"
 
 - name: update | disable release-upgrades
   lineinfile:

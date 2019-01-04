@@ -1,7 +1,8 @@
 # tasks file for packer-template
 ---
 - name: virtualbox | get version
-  command: cat /home/vagrant/.vbox_version
+  command: >
+    cat /home/vagrant/.vbox_version
   register: _vbox_version
 
 # Only needed for testing purposes, not during a Packer run
@@ -18,7 +19,7 @@
     owner: vagrant
     group: vagrant
     mode: 0644
-  when: _stat_iso.stat.exists == false
+  when: not _stat_iso.stat.exists
 
 - name: virtualbox | mount iso
   mount:
@@ -29,7 +30,8 @@
     fstype: iso9660
 
 - name: virtualbox | run installer
-  shell: sh /tmp/vbox/VBoxLinuxAdditions.run
+  shell: >
+    sh /tmp/vbox/VBoxLinuxAdditions.run
   failed_when: false
 
 - name: virtualbox | fix mount.vboxsf

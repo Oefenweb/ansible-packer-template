@@ -2,7 +2,8 @@
 ---
 - block:
     - name: networking | disable automatic udev rules for interfaces
-      command: rm -rfv {{ item }}
+      command: >
+        rm -rfv {{ item }}
       register: _disable_udev_rules
       changed_when: _disable_udev_rules.stdout_lines | length > 0
       with_items:
@@ -26,6 +27,8 @@
 - name: networking | disable predictable network interface names
   shell: >
     {{ item }}
+  args:
+    warn: false
   with_items:
     - sed -i 's/en[[:alnum:]]*/eth0/g' /etc/network/interfaces
     - sed -ie 's/GRUB_CMDLINE_LINUX="\(.*\)"/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 \1"/g' /etc/default/grub

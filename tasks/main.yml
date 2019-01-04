@@ -1,12 +1,12 @@
 # tasks file for packer-template
 ---
 - block:
-    - include: tasks/metadata.yml
-    - include: tasks/update.yml
-    - include: tasks/ssh-server.yml
-    - include: tasks/networking.yml
-    - include: tasks/vagrant.yml
-    - include: tasks/reboot.yml
+    - include: metadata.yml
+    - include: update.yml
+    - include: ssh-server.yml
+    - include: networking.yml
+    - include: vagrant.yml
+    - include: reboot.yml
   when: packer_template_state == 'pre'
   tags:
     - configuration
@@ -14,8 +14,8 @@
     - packer-template-pre
 
 - block:
-    - include: tasks/virtualbox.yml
-    - include: tasks/cleanup.yml
+    - include: virtualbox.yml
+    - include: cleanup.yml
   when: packer_template_state == 'post'
   tags:
     - configuration
