@@ -1,11 +1,14 @@
 # tasks file for packer-template
 ---
-- name: update | cache and install dependencies
+- name: update | cache
+  apt:
+    update_cache: true
+    cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
+
+- name: update | install dependencies
   apt:
     name: "{{ packer_template_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
-    update_cache: true
-    cache_valid_time: 3600
 
 - name: update | disable release-upgrades
   lineinfile:
@@ -15,13 +18,18 @@
     state: present
   when: ansible_distribution == 'Ubuntu'
 
-- name: update | cache on boot
-  copy:
-    src: etc/init/refresh-apt.conf
-    dest: /etc/init/refresh-apt.conf
-    owner: root
-    group: root
-    mode: 0644
+- name: update | disable systemd apt timers/services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+    masked: true
+    daemon_reload: true
+  with_items:
+    - apt-daily.timer
+    - apt-daily-upgrade.timer
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('16.04', '>=')) or
+        (ansible_distribution == 'Debian' and ansible_distribution_version is version('9', '>='))
 
 - name: update | disable periodic activities
   copy:

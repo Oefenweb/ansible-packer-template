@@ -41,3 +41,4 @@ packer_template_preset_cleanup_more_various:
   - ntfs-3g
   - laptop-detect
   - linux-firmware
+#  - unattended-upgrades
