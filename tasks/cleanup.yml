@@ -21,11 +21,10 @@
 
 - name: cleanup | delete development packages
   apt:
-    name: "{{ item }}"
+    name: "{{ _development_packages.stdout_lines | default([]) }}"
     state: absent
     purge: true
   when: item not in packer_template_cleanup_development_exclude
-  with_items: "{{ _development_packages.stdout_lines | default([]) }}"
 
 - name: cleanup | get docs packages
   shell: >
@@ -35,11 +34,10 @@
 
 - name: cleanup | delete doc packages
   apt:
-    name: "{{ item }}"
+    name: "{{ _doc_packages.stdout_lines | default([]) }}"
     state: absent
     purge: true
   when: item not in packer_template_cleanup_doc_exclude
-  with_items: "{{ _doc_packages.stdout_lines | default([]) }}"
 
 - name: cleanup | delete more packages
   apt:

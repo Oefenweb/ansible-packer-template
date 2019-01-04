@@ -4,6 +4,8 @@
     - name: networking | disable automatic udev rules for interfaces
       command: >
         rm -rfv {{ item }}
+      args:
+        warn: false
       register: _disable_udev_rules
       changed_when: _disable_udev_rules.stdout_lines | length > 0
       with_items:
