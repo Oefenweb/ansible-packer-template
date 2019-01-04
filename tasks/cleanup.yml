@@ -82,3 +82,12 @@
     - find /var/cache -type f -print0 | xargs --no-run-if-empty -0 rm -fv
     # log files
     - find /var/log -type f -print0 | xargs --no-run-if-empty -0 rm -fv
+
+- name: cleanup | blank netplan machine-id
+  copy:
+    content: ''
+    dest: /etc/machine-id
+    force: true
+    group: root
+    owner: root
+    mode: 0444

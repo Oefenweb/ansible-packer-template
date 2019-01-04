@@ -39,6 +39,7 @@ packer_template_preset_cleanup_more_various:
   - wireless-tools
   - wpasupplicant
   - ntfs-3g
+  - fonts-ubuntu-font-family-console
   - laptop-detect
   - linux-firmware
-#  - unattended-upgrades
+  - unattended-upgrades
