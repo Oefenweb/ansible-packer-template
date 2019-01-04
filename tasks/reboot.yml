@@ -1,5 +1,6 @@
 # tasks file for packer-template
 ---
 - name: reboot | trigger
-  command: /bin/true
+  command: >
+    /bin/true
   notify: reboot

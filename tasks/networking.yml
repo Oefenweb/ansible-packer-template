@@ -2,7 +2,10 @@
 ---
 - block:
     - name: networking | disable automatic udev rules for interfaces
-      command: rm -rfv {{ item }}
+      command: >
+        rm -rfv {{ item }}
+      args:
+        warn: false
       register: _disable_udev_rules
       changed_when: _disable_udev_rules.stdout_lines | length > 0
       with_items:
@@ -16,18 +19,33 @@
       file:
         path: /etc/udev/rules.d/70-persistent-net.rules
         state: directory
-  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15.04', '<') or ansible_distribution == 'Debian')
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15.04', '<')) or
+        (ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '<='))
+
+- name: networking | create netplan config
+  copy:
+    src: etc/netplan/01-netcfg.yaml
+    dest: /etc/netplan/01-netcfg.yaml
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '>=')
 
 - name: networking | make dhclient happy
   lineinfile:
     dest: /etc/network/interfaces
     line: 'pre-up sleep 2'
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '<')) or
+        (ansible_distribution == 'Debian')
 
 - name: networking | disable predictable network interface names
   shell: >
     {{ item }}
+  args:
+    warn: false
   with_items:
     - sed -i 's/en[[:alnum:]]*/eth0/g' /etc/network/interfaces
     - sed -ie 's/GRUB_CMDLINE_LINUX="\(.*\)"/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 \1"/g' /etc/default/grub
     - update-grub
-  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('16.04', '>=') or ansible_distribution == 'Debian' and ansible_distribution_version is version('9', '>='))
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('16.04', '>=')) or
+        (ansible_distribution == 'Debian' and ansible_distribution_version is version('9', '>='))
