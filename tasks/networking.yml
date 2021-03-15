@@ -1,4 +1,4 @@
-# tasks file for packer-template
+# tasks file
 ---
 - block:
     - name: networking | disable automatic udev rules for interfaces

@@ -1,4 +1,4 @@
-# tasks file for packer-template
+# tasks file
 ---
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=751636
 - name: systemd | install libpam-systemd

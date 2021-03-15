@@ -1,4 +1,4 @@
-# tasks file for packer-template
+# tasks file
 ---
 - name: reboot | trigger
   command: >

@@ -1,4 +1,4 @@
-# defaults file for packer-template
+# defaults file
 ---
 packer_template_state: ''
 packer_template_metadata:

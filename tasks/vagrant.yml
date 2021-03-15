@@ -1,4 +1,4 @@
-# tasks file for packer-template
+# tasks file
 ---
 - name: vagrant | create .ssh directory
   file:

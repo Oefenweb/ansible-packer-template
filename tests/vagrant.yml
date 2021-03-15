@@ -1,4 +1,4 @@
-# test file for packer-template
+# test file
 ---
 - hosts: all
   remote_user: vagrant

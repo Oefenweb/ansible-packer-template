@@ -1,6 +1,7 @@
-# meta file for packer-template
+# meta file
 ---
 galaxy_info:
+  namespace: oefenweb
   role_name: packer-template
   author: Mischa ter Smitten
   company: Oefenweb.nl B.V.

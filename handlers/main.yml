@@ -1,4 +1,4 @@
-# handlers file for packer-template
+# handlers file
 ---
 - name: reboot
   shell: sleep 2 && shutdown -r now

@@ -1,4 +1,4 @@
-# tasks file for packer-template
+# tasks file
 ---
 - block:
     - include: metadata.yml
