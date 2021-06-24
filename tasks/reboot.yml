@@ -1,4 +1,6 @@
 # tasks file
 ---
 - name: reboot | trigger
-  reboot:
+  command: >
+    /bin/true
+  notify: reboot
