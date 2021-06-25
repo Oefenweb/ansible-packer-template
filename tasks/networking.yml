@@ -19,6 +19,7 @@
       file:
         path: /etc/udev/rules.d/70-persistent-net.rules
         state: directory
+        mode: 0755
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15.04', '<')) or
         (ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '<='))
 

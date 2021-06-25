@@ -1,7 +1,6 @@
-skip_list:
-  - '204'
-  - '301'
-  - '302'
-  - '303'
-  - '305'
-  - '405'
+---
+warn_list:
+  - '106'
+  - no-changed-when
+  - risky-shell-pipe
+  - command-instead-of-module
