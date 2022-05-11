@@ -2,7 +2,7 @@
 ---
 - name: vagrant | create .ssh directory
   file:
-    path: /home/vagrant/.ssh
+    path: "{{ packer_template_authorized_keys_path }}"
     state: directory
     owner: vagrant
     group: vagrant
@@ -10,14 +10,26 @@
 
 - name: vagrant | download public key
   get_url:
-    url: https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub
-    dest: /home/vagrant/.ssh/authorized_keys
+    url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
+    dest: "{{ packer_template_authorized_keys_path }}/vagrant.pub"
     owner: vagrant
     group: vagrant
     mode: 0600
 
+- name: vagrant | ch(own|mod) authorized_keys
+  file:
+    path: "{{ packer_template_authorized_keys_file }}"
+    state: touch
+    owner: vagrant
+    group: vagrant
+    mode: 0600
+
+- name: vagrant | append public key
+  shell: >
+    cat {{ packer_template_authorized_keys_path }}/vagrant.pub >> {{ packer_template_authorized_keys_file }}
+
 - name: vagrant | synchronize .ssh directory to root
   command: >
-    rsync -ai --delete --no-o --no-g /home/vagrant/.ssh/ /root/.ssh
+    rsync -ai --delete --no-o --no-g {{ packer_template_authorized_keys_path }}/ /root/.ssh
   register: _synchronize_to_root
   changed_when: _synchronize_to_root.stdout_lines | length > 0

@@ -10,13 +10,20 @@
     name: "{{ packer_template_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
 
+- name: update | stat release-upgrades
+  stat:
+    path: "{{ packer_template_release_upgrades_file }}"
+  register: _stat_release_upgrades
+
 - name: update | disable release-upgrades
   lineinfile:
-    dest: /etc/update-manager/release-upgrades
+    dest: "{{ packer_template_release_upgrades_file }}"
     regexp: '^Prompt=.*$'
     line: 'Prompt=never'
     state: present
-  when: ansible_distribution == 'Ubuntu'
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - _stat_release_upgrades.stat.exists
 
 - name: update | disable systemd apt timers/services
   systemd:

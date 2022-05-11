@@ -34,7 +34,7 @@
 
 - name: networking | make dhclient happy
   lineinfile:
-    dest: /etc/network/interfaces
+    dest: "{{ packer_template_network_interfaces_file }}"
     line: 'pre-up sleep 2'
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '<')) or
         (ansible_distribution == 'Debian')
@@ -45,7 +45,7 @@
   args:
     warn: false
   with_items:
-    - sed -i 's/en[[:alnum:]]*/eth0/g' /etc/network/interfaces
+    - (test -e {{ packer_template_network_interfaces_file }} && sed -i 's/en[[:alnum:]]*/eth0/g' {{ packer_template_network_interfaces_file }}) || true
     - sed -ie 's/GRUB_CMDLINE_LINUX="\(.*\)"/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 \1"/g' /etc/default/grub
     - update-grub
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('16.04', '>=')) or

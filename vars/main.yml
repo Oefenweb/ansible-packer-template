@@ -1,2 +1,6 @@
 # vars file
 ---
+packer_template_release_upgrades_file: /etc/update-manager/release-upgrades
+packer_template_network_interfaces_file: /etc/network/interfaces
+packer_template_authorized_keys_file: /home/vagrant/.ssh/authorized_keys
+packer_template_authorized_keys_path: "{{ packer_template_authorized_keys_file | dirname }}"
