@@ -1,11 +1,9 @@
 # tasks file
 ---
 - block:
-    - name: networking | disable automatic udev rules for interfaces
+    - name: networking | disable automatic udev rules for interfaces  # noqa command-instead-of-module
       command: >
         rm -rfv {{ item }}
-      args:
-        warn: false
       register: _disable_udev_rules
       changed_when: _disable_udev_rules.stdout_lines | length > 0
       with_items:
@@ -41,11 +39,9 @@
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '<')) or
         (ansible_distribution == 'Debian')
 
-- name: networking | disable predictable network interface names
+- name: networking | disable predictable network interface names  # noqa command-instead-of-module
   shell: >
     {{ item }}
-  args:
-    warn: false
   with_items:
     - (test -e {{ packer_template_network_interfaces_file }} && sed -i 's/en[[:alnum:]]*/eth0/g' {{ packer_template_network_interfaces_file }}) || true
     - sed -ie 's/GRUB_CMDLINE_LINUX="\(.*\)"/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0 \1"/g' /etc/default/grub
