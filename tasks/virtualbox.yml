@@ -28,6 +28,7 @@
     owner: vagrant
     group: vagrant
     mode: 0644
+    force: true
   when: _vbox_version.stdout is version('7.0.8', '==')
 
 - name: virtualbox | mount iso
