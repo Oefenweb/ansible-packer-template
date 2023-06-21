@@ -1,24 +1,35 @@
 # tasks file
 ---
-- block:
-    - include: metadata.yml
-    - include: update.yml
-    - include: ssh-server.yml
-    - include: networking.yml
-    - include: vagrant.yml
-    - include: systemd.yml
-    - include: reboot.yml
+- name: pre
   when: packer_template_state == 'pre'
   tags:
     - configuration
     - packer-template
     - packer-template-pre
+  block:
+    - name: metadata
+      ansible.builtin.import_tasks: metadata.yml
+    - name: update
+      ansible.builtin.import_tasks: update.yml
+    - name: ssh-server
+      ansible.builtin.import_tasks: ssh-server.yml
+    - name: networking
+      ansible.builtin.import_tasks: networking.yml
+    - name: vagrant
+      ansible.builtin.import_tasks: vagrant.yml
+    - name: systemd
+      ansible.builtin.import_tasks: systemd.yml
+    - name: reboot
+      ansible.builtin.import_tasks: reboot.yml
 
-- block:
-    - include: virtualbox.yml
-    - include: cleanup.yml
+- name: post
   when: packer_template_state == 'post'
   tags:
     - configuration
     - packer-template
     - packer-template-post
+  block:
+    - name: virtualbox
+      ansible.builtin.import_tasks: virtualbox.yml
+    - name: cleanup
+      ansible.builtin.import_tasks: cleanup.yml

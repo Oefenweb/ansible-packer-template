@@ -2,7 +2,7 @@
 ---
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=751636
 - name: systemd | install libpam-systemd
-  apt:
+  ansible.builtin.apt:
     name: libpam-systemd
     state: "{{ apt_install_state | default('latest') }}"
   when:

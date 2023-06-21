@@ -1,19 +1,19 @@
 # tasks file
 ---
 - name: virtualbox | get version
-  command: >
+  ansible.builtin.command: >
     cat /home/vagrant/.vbox_version
   register: _vbox_version
 
 # Only needed for testing purposes, not during a Packer run
 - name: virtualbox | stat iso
-  stat:
+  ansible.builtin.stat:
     path: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
   register: _stat_iso
 
 # Only needed for testing purposes, not during a Packer run
 - name: virtualbox | download iso
-  get_url:
+  ansible.builtin.get_url:
     url: "http://download.virtualbox.org/virtualbox/{{ _vbox_version.stdout }}/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
     dest: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
     owner: vagrant
@@ -21,8 +21,22 @@
     mode: 0644
   when: not _stat_iso.stat.exists
 
+# https://www.virtualbox.org/ticket/21740#ticket
+- name: virtualbox | download iso
+  ansible.builtin.get_url:
+    url: "http://download.virtualbox.org/virtualbox/7.0.6/VBoxGuestAdditions_7.0.6.iso"
+    dest: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+    force: true
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('20.04', '==')
+    - _vbox_version.stdout is version('7.0.8', '==')
+
 - name: virtualbox | mount iso
-  mount:
+  ansible.posix.mount:
     name: /tmp/vbox
     src: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
     opts: loop
@@ -30,12 +44,12 @@
     fstype: iso9660
 
 - name: virtualbox | run installer
-  shell: >
+  ansible.builtin.shell: >
     sh /tmp/vbox/VBoxLinuxAdditions.run
   failed_when: false
 
 - name: virtualbox | fix mount.vboxsf
-  file:
+  ansible.builtin.file:
     src: "/opt/VBoxGuestAdditions-{{ _vbox_version.stdout }}/lib/VBoxGuestAdditions/mount.vboxsf"
     dest: /sbin/mount.vboxsf
     state: link
@@ -44,14 +58,14 @@
   when: _vbox_version.stdout is version('5.1.20', '==')
 
 - name: virtualbox | umount iso
-  mount:
+  ansible.posix.mount:
     name: /tmp/vbox
     src: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
     state: absent
     fstype: iso9660
 
 - name: virtualbox | cleanup
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   with_items:
