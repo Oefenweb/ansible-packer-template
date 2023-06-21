@@ -7,13 +7,20 @@
     - packer-template
     - packer-template-pre
   block:
-    - ansible.builtin.import_tasks: metadata.yml
-    - ansible.builtin.import_tasks: update.yml
-    - ansible.builtin.import_tasks: ssh-server.yml
-    - ansible.builtin.import_tasks: networking.yml
-    - ansible.builtin.import_tasks: vagrant.yml
-    - ansible.builtin.import_tasks: systemd.yml
-    - ansible.builtin.import_tasks: reboot.yml
+    - name: metadata
+      ansible.builtin.import_tasks: metadata.yml
+    - name: update
+      ansible.builtin.import_tasks: update.yml
+    - name: ssh-server
+      ansible.builtin.import_tasks: ssh-server.yml
+    - name: networking
+      ansible.builtin.import_tasks: networking.yml
+    - name: vagrant
+      ansible.builtin.import_tasks: vagrant.yml
+    - name: systemd
+      ansible.builtin.import_tasks: systemd.yml
+    - name: reboot
+      ansible.builtin.import_tasks: reboot.yml
 
 - name: post
   when: packer_template_state == 'post'
@@ -22,5 +29,7 @@
     - packer-template
     - packer-template-post
   block:
-    - ansible.builtin.import_tasks: virtualbox.yml
-    - ansible.builtin.import_tasks: cleanup.yml
+    - name: virtualbox
+      ansible.builtin.import_tasks: virtualbox.yml
+    - name: cleanup
+      ansible.builtin.import_tasks: cleanup.yml
