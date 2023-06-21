@@ -21,6 +21,7 @@
     mode: 0644
   when: not _stat_iso.stat.exists
 
+# https://www.virtualbox.org/ticket/21740#ticket
 - name: virtualbox | download iso
   get_url:
     url: "http://download.virtualbox.org/virtualbox/7.0.6/VBoxGuestAdditions_7.0.6.iso"
@@ -29,7 +30,10 @@
     group: vagrant
     mode: 0644
     force: true
-  when: _vbox_version.stdout is version('7.0.8', '==')
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('20.04', '==')
+    - _vbox_version.stdout is version('7.0.8', '==')
 
 - name: virtualbox | mount iso
   mount:
@@ -38,10 +42,6 @@
     opts: loop
     state: mounted
     fstype: iso9660
-
-#- name: pause for 3600 minutes to do some debuuging
-#  pause:
-#    minutes: 3600
 
 - name: virtualbox | run installer
   shell: >
