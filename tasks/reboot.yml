@@ -1,6 +1,6 @@
 # tasks file
 ---
 - name: reboot | trigger
-  command: >
+  ansible.builtin.command: >
     /bin/true
   notify: reboot

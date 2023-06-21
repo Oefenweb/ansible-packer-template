@@ -1,4 +1,3 @@
 # requirements file
 ---
-collections:
-  - name: ansible.posix
+collections: []

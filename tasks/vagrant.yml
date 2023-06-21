@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: vagrant | create .ssh directory
-  file:
+  ansible.builtin.file:
     path: "{{ packer_template_authorized_keys_path }}"
     state: directory
     owner: vagrant
@@ -9,7 +9,7 @@
     mode: 0700
 
 - name: vagrant | download public key
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub
     dest: "{{ packer_template_authorized_keys_path }}/vagrant.pub"
     owner: vagrant
@@ -17,7 +17,7 @@
     mode: 0600
 
 - name: vagrant | ch(own|mod) authorized_keys
-  file:
+  ansible.builtin.file:
     path: "{{ packer_template_authorized_keys_file }}"
     state: touch
     owner: vagrant
@@ -25,11 +25,11 @@
     mode: 0600
 
 - name: vagrant | append public key
-  shell: >
+  ansible.builtin.shell: >
     cat {{ packer_template_authorized_keys_path }}/vagrant.pub >> {{ packer_template_authorized_keys_file }}
 
 - name: vagrant | synchronize .ssh directory to root
-  command: >
+  ansible.builtin.command: >
     rsync -ai --delete --no-o --no-g {{ packer_template_authorized_keys_path }}/ /root/.ssh
   register: _synchronize_to_root
   changed_when: _synchronize_to_root.stdout_lines | length > 0

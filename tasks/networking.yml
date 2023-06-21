@@ -1,8 +1,11 @@
 # tasks file
 ---
+- name: networking | disable automatic udev rules for interfaces
+  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15.04', '<')) or
+        (ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '<='))
 - block:
     - name: networking | disable automatic udev rules for interfaces  # noqa command-instead-of-module
-      command: >
+      ansible.builtin.command: >
         rm -rfv {{ item }}
       register: _disable_udev_rules
       changed_when: _disable_udev_rules.stdout_lines | length > 0
@@ -14,15 +17,13 @@
         - /var/lib/dhcp/*
 
     - name: networking | disable automatic udev rules for interfaces
-      file:
+      ansible.builtin.file:
         path: /etc/udev/rules.d/70-persistent-net.rules
         state: directory
         mode: 0755
-  when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('15.04', '<')) or
-        (ansible_distribution == 'Debian' and ansible_distribution_version is version('8', '<='))
 
 - name: networking | create netplan config
-  copy:
+  ansible.builtin.copy:
     src: etc/netplan/01-netcfg.yaml
     dest: /etc/netplan/01-netcfg.yaml
     owner: root
@@ -33,7 +34,7 @@
     - ansible_distribution_version is version('17.10', '>=')
 
 - name: networking | remove cloud init
-  file:
+  ansible.builtin.file:
     path: /etc/netplan/50-cloud-init.yaml
     state: absent
   when:
@@ -41,7 +42,7 @@
     - ansible_distribution_version is version('18.04', '>=')
 
 - name: networking | remove installer config
-  file:
+  ansible.builtin.file:
     path: /etc/netplan/00-installer-config.yaml
     state: absent
   when:
@@ -49,14 +50,14 @@
     - ansible_distribution_version is version('20.04', '>=')
 
 - name: networking | make dhclient happy
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ packer_template_network_interfaces_file }}"
     line: 'pre-up sleep 2'
   when: (ansible_distribution == 'Ubuntu' and ansible_distribution_version is version('17.10', '<')) or
         (ansible_distribution == 'Debian')
 
 - name: networking | disable predictable network interface names  # noqa command-instead-of-module
-  shell: >
+  ansible.builtin.shell: >
     {{ item }}
   with_items:
     - (test -e {{ packer_template_network_interfaces_file }} && sed -i 's/en[[:alnum:]]*/eth0/g' {{ packer_template_network_interfaces_file }}) || true

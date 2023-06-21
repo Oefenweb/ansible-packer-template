@@ -1,26 +1,26 @@
 # tasks file
 ---
 - name: cleanup | delete all linux headers
-  shell: >
+  ansible.builtin.shell: >
     dpkg --get-selections |  awk '{ print $1 }' | grep 'linux-headers' | xargs --no-run-if-empty apt-get -y purge
 
 - name: cleanup | delete specific linux kernels
-  shell: >
+  ansible.builtin.shell: >
     dpkg --get-selections |  awk '{ print $1 }' | grep 'linux-image-.*-generic' | grep -v `uname -r` | \
     xargs --no-run-if-empty apt-get -y purge
 
 - name: cleanup | delete linux source
-  shell: >
+  ansible.builtin.shell: >
     dpkg --get-selections |  awk '{ print $1 }' | grep linux-source | xargs --no-run-if-empty apt-get -y purge
 
 - name: cleanup | get development packages
-  shell: >
+  ansible.builtin.shell: >
     dpkg --get-selections |  awk '{ print $1 }' | grep -- '-dev$'
   register: _development_packages
   failed_when: false
 
 - name: cleanup | delete development packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ item }}"
     state: absent
     purge: true
@@ -28,13 +28,13 @@
   with_items: "{{ _development_packages.stdout_lines | default([]) }}"
 
 - name: cleanup | get docs packages
-  shell: >
+  ansible.builtin.shell: >
     dpkg --get-selections |  awk '{ print $1 }' | grep -- '-doc$'
   register: _doc_packages
   failed_when: false
 
 - name: cleanup | delete doc packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ item }}"
     state: absent
     purge: true
@@ -42,20 +42,20 @@
   with_items: "{{ _doc_packages.stdout_lines | default([]) }}"
 
 - name: cleanup | delete more packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ packer_template_cleanup_more }}"
     state: absent
     purge: true
 
 - name: cleanup | apt clean and autoremove  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     apt-get -y {{ item }}
   with_items:
     - clean
     - autoremove
 
 - name: cleanup | remove files  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     rm -rfv {{ item }}
   register: _remove_files
   changed_when: _remove_files.stdout_lines | default([]) | length > 0
@@ -69,7 +69,7 @@
     - /home/vagrant/.cache/pip
 
 - name: cleanup | remove files
-  shell: >
+  ansible.builtin.shell: >
     {{ item }}
   register: _remove_files
   changed_when: _remove_files.stdout_lines | default([]) | length > 0
@@ -80,7 +80,7 @@
     - find /var/log -type f -print0 | xargs --no-run-if-empty -0 rm -fv
 
 - name: cleanup | blank netplan machine-id
-  copy:
+  ansible.builtin.copy:
     content: ''
     dest: /etc/machine-id
     force: true

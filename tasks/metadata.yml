@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: metadata | add
-  copy:
+  ansible.builtin.copy:
     content: "{{ packer_template_metadata | to_json }}"
     dest: /etc/packer-metadata.json
     owner: root
