@@ -21,6 +21,15 @@
     mode: 0644
   when: not _stat_iso.stat.exists
 
+- name: virtualbox | download iso
+  get_url:
+    url: "https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_7.0.97-157801.iso"
+    dest: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+  when: _vbox_version.stdout is version('7.0.8', '==')
+
 - name: virtualbox | mount iso
   mount:
     name: /tmp/vbox
@@ -28,6 +37,10 @@
     opts: loop
     state: mounted
     fstype: iso9660
+
+#- name: pause for 3600 minutes to do some debuuging
+#  pause:
+#    minutes: 3600
 
 - name: virtualbox | run installer
   shell: >
