@@ -21,20 +21,6 @@
     mode: 0644
   when: not _stat_iso.stat.exists
 
-# https://www.virtualbox.org/ticket/21740#ticket
-- name: virtualbox | download iso
-  ansible.builtin.get_url:
-    url: "http://download.virtualbox.org/virtualbox/7.0.6/VBoxGuestAdditions_7.0.6.iso"
-    dest: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
-    owner: vagrant
-    group: vagrant
-    mode: 0644
-    force: true
-  when:
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_version is version('20.04', '==')
-    - _vbox_version.stdout is version('7.0.8', '==')
-
 - name: virtualbox | mount iso
   ansible.posix.mount:
     name: /tmp/vbox
