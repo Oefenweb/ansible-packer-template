@@ -10,7 +10,7 @@
 - hosts: all
   remote_user: vagrant
   become: true
-  gather_facts: no
+  gather_facts: false
   pre_tasks:
     - name: pre | wait for ssh
       ansible.builtin.wait_for:
