@@ -31,7 +31,7 @@ None
 ---
 - hosts: all
   roles:
-    - packer-template
+    - oefenweb.packer-template
 ```
 
 #### License
