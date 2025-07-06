@@ -86,4 +86,4 @@
     force: true
     group: root
     owner: root
-    mode: 0444
+    mode: '0444'

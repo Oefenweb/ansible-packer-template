@@ -20,7 +20,7 @@
       ansible.builtin.file:
         path: /etc/udev/rules.d/70-persistent-net.rules
         state: directory
-        mode: 0755
+        mode: '0755'
 
 - name: networking | create netplan config
   ansible.builtin.copy:
@@ -28,7 +28,7 @@
     dest: /etc/netplan/01-netcfg.yaml
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   when:
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('17.10', '>=')
@@ -42,7 +42,7 @@
     - ansible_distribution_version is version('18.04', '>=')
 
 - name: networking | cloud init | disable network config
-  copy:
+  ansible.builtin.copy:
     content: |
       network: {config: disabled}
     dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
