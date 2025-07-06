@@ -1,13 +1,15 @@
 # test file
 ---
-- hosts: all
+- name: converge
+  hosts: all
   remote_user: vagrant
   become: true
   roles:
     - role: ../../
       packer_template_state: pre
 
-- hosts: all
+- name: converge
+  hosts: all
   remote_user: vagrant
   become: true
   gather_facts: false
@@ -21,7 +23,8 @@
       connection: local
       become: false
 
-- hosts: all
+- name: converge
+  hosts: all
   remote_user: vagrant
   become: true
   roles:
