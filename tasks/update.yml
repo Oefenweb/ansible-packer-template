@@ -44,7 +44,7 @@
     dest: /etc/apt/apt.conf.d/10periodic-disable
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
 
 - name: update | upgrade dist
   ansible.builtin.apt:

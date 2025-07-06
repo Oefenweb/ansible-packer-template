@@ -18,7 +18,7 @@
     dest: "/home/vagrant/VBoxGuestAdditions_{{ _vbox_version.stdout }}.iso"
     owner: vagrant
     group: vagrant
-    mode: 0644
+    mode: '0644'
   when: not _stat_iso.stat.exists
 
 - name: virtualbox | mount iso

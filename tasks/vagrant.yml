@@ -6,7 +6,7 @@
     state: directory
     owner: vagrant
     group: vagrant
-    mode: 0700
+    mode: '0700'
 
 - name: vagrant | download public key
   ansible.builtin.get_url:
@@ -14,7 +14,7 @@
     dest: "{{ packer_template_authorized_keys_path }}/vagrant.pub"
     owner: vagrant
     group: vagrant
-    mode: 0600
+    mode: '0600'
 
 - name: vagrant | ch(own|mod) authorized_keys
   ansible.builtin.file:
@@ -22,7 +22,7 @@
     state: touch
     owner: vagrant
     group: vagrant
-    mode: 0600
+    mode: '0600'
 
 - name: vagrant | append public key
   ansible.builtin.shell: >
