@@ -46,6 +46,9 @@
     content: |
       network: {config: disabled}
     dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+    owner: root
+    group: root
+    mode: '0644'
   when:
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('22.04', '>=')
