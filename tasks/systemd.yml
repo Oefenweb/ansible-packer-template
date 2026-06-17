@@ -6,5 +6,5 @@
     name: libpam-systemd
     state: "{{ apt_install_state | default('latest') }}"
   when:
-    - ansible_distribution == 'Debian'
-    - ansible_distribution_major_version is version('8', '>=')
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] is version('8', '>=')
