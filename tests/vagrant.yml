@@ -16,8 +16,8 @@
   pre_tasks:
     - name: pre | wait for ssh
       ansible.builtin.wait_for:
-        port: "{{ ansible_ssh_port | default(22) }}"
-        host: "{{ ansible_ssh_host | default(inventory_hostname) }}"
+        port: "{{ ansible_facts['ssh_port'] | default(22) }}"
+        host: "{{ ansible_facts['ssh_host'] | default(inventory_hostname) }}"
         search_regex: OpenSSH
         delay: 10
       connection: local
